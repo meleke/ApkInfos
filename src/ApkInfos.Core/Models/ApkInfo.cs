@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------------
+// ApkInfos - APK / AAB 信息查看工具
+// 文件：ApkInfo.cs
+// 说明：APK / AAB 解析结果模型
+// 作者：Wade.liuyu (meleke_ly@126.com)
+// 创建：2026-11-04
+// 许可：Apache License 2.0
+// ----------------------------------------------------------------------------
+
 namespace ApkInfos.Core.Models;
 
 /// <summary>
@@ -59,8 +68,19 @@ public sealed class ApkInfo
     /// <summary>主证书：用于显示指纹与 keystore 比对。</summary>
     public CertInfo? PrimaryCertificate => Certificates.Count > 0 ? Certificates[0] : null;
 
+    // ---------- Firebase ----------
+    /// <summary>从字符串资源还原的 google-services 配置；未接入 Firebase 时为 null。</summary>
+    public FirebaseConfig? Firebase { get; set; }
+
+    public FacebookInfo Facebook { get; set; } = new();
+
+    public AdjustInfo Adjust { get; set; } = new();
+
     // ---------- Manifest ----------
     public string ManifestXml { get; set; } = "";
+
+    /// <summary>带中文注解（XML 注释）的 Manifest。</summary>
+    public string ManifestXmlAnnotated { get; set; } = "";
 
     /// <summary>解析过程中的非致命问题。</summary>
     public List<string> Warnings { get; } = new();

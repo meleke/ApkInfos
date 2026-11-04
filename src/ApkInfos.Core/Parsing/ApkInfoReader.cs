@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------------
+// ApkInfos - APK / AAB 信息查看工具
+// 文件：ApkInfoReader.cs
+// 说明：APK / AAB 解析总入口
+// 作者：Wade.liuyu (meleke_ly@126.com)
+// 创建：2026-11-04
+// 许可：Apache License 2.0
+// ----------------------------------------------------------------------------
+
 using System.IO.Compression;
 using ApkInfos.Core.Models;
 using ApkInfos.Core.Util;
@@ -53,6 +62,19 @@ public static class ApkInfoReader
         // 2. 基本字段
         FillManifestFields(manifest, resources, info);
 
+        // 2.1 Firebase（google-services.json 转成的字符串资源）
+        info.Firebase = FirebaseConfig.FromResources(resources);
+
+        // 2.2 Facebook / Adjust
+        try
+        {
+            SdkDetector.Detect(zip, manifest, resources, info);
+        }
+        catch (Exception ex)
+        {
+            info.Warnings.Add($"识别第三方 SDK 失败：{ex.Message}");
+        }
+
         // 3. ABI
         CollectAbis(zip, info, isAab);
 
@@ -74,6 +96,15 @@ public static class ApkInfoReader
 
         // 6. 可读 Manifest
         info.ManifestXml = ManifestXmlWriter.Write(manifest, resources);
+        try
+        {
+            info.ManifestXmlAnnotated = ManifestXmlWriter.Write(manifest, resources, annotate: true);
+        }
+        catch (Exception ex)
+        {
+            info.ManifestXmlAnnotated = info.ManifestXml;
+            info.Warnings.Add($"生成 Manifest 注解失败：{ex.Message}");
+        }
         return info;
     }
 
@@ -167,7 +198,7 @@ public static class ApkInfoReader
     /// <summary>
     /// 属性的展示文本；引用到字符串资源时解析出实际值。
     /// </summary>
-    private static string Text(ManifestAttribute? attr, ResourceTable? resources)
+    internal static string Text(ManifestAttribute? attr, ResourceTable? resources)
     {
         if (attr == null)
         {

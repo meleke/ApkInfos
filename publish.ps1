@@ -1,5 +1,12 @@
-﻿# 一键发布：Windows exe + macOS .app（自包含、单文件、部分裁剪、压缩）
+﻿# ----------------------------------------------------------------------------
+# ApkInfos - APK / AAB 信息查看工具
+# 文件：publish.ps1
+# 说明：一键发布：Windows exe + macOS .app（自包含、单文件、部分裁剪、压缩）
 # 用法：powershell -ExecutionPolicy Bypass -File publish.ps1 [-Runtimes win-x64,osx-arm64,osx-x64]
+# 作者：Wade.liuyu (meleke_ly@126.com)
+# 创建：2026-11-04
+# 许可：Apache License 2.0
+# ----------------------------------------------------------------------------
 param(
     [string[]]$Runtimes = @('win-x64', 'osx-arm64', 'osx-x64'),
     [string]$Configuration = 'Release',

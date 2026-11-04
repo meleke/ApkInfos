@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------------
+// ApkInfos - APK / AAB 信息查看工具
+// 文件：ManifestWindow.axaml.cs
+// 说明：AndroidManifest.xml 查看窗口：中文注解开关、复制与另存为
+// 作者：Wade.liuyu (meleke_ly@126.com)
+// 创建：2026-11-04
+// 许可：Apache License 2.0
+// ----------------------------------------------------------------------------
+
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -6,11 +15,12 @@ using Avalonia.Platform.Storage;
 namespace ApkInfos.App;
 
 /// <summary>
-/// 显示解码后的 AndroidManifest.xml，支持复制与另存为。
+/// 显示解码后的 AndroidManifest.xml，可切换中文注解，支持复制与另存为（按当前显示内容）。
 /// </summary>
 public partial class ManifestWindow : Window
 {
-    private readonly string _xml = "";
+    private readonly string _rawXml = "";
+    private readonly string _annotatedXml = "";
     private readonly string _suggestedName = "AndroidManifest.xml";
 
     public ManifestWindow()
@@ -18,14 +28,34 @@ public partial class ManifestWindow : Window
         InitializeComponent();
     }
 
-    public ManifestWindow(string sourceName, string xml, string suggestedName)
+    public ManifestWindow(string sourceName, string rawXml, string annotatedXml, string suggestedName)
         : this()
     {
-        _xml = xml;
+        _rawXml = rawXml;
+        _annotatedXml = string.IsNullOrEmpty(annotatedXml) ? rawXml : annotatedXml;
         _suggestedName = suggestedName;
         Title = $"AndroidManifest.xml - {sourceName}";
+        ShowCurrent();
+    }
+
+    private string CurrentXml => AnnotateCheck.IsChecked == true ? _annotatedXml : _rawXml;
+
+    private void ShowCurrent()
+    {
+        string xml = CurrentXml;
         XmlBox.Text = xml;
         InfoText.Text = $"{xml.Split('\n').Length} 行";
+    }
+
+    private void OnAnnotateChanged(object? sender, RoutedEventArgs e)
+    {
+        // 构造前（InitializeComponent 阶段）也会触发，此时内容尚未赋值
+        if (_rawXml.Length == 0)
+        {
+            return;
+        }
+
+        ShowCurrent();
     }
 
     private async void OnCopyClick(object? sender, RoutedEventArgs e)
@@ -36,7 +66,7 @@ public partial class ManifestWindow : Window
             return;
         }
 
-        await clipboard.SetTextAsync(_xml);
+        await clipboard.SetTextAsync(CurrentXml);
         InfoText.Text = "已复制到剪贴板";
     }
 
@@ -65,7 +95,7 @@ public partial class ManifestWindow : Window
         {
             await using var stream = await file.OpenWriteAsync();
             stream.SetLength(0);
-            var bytes = new UTF8Encoding(false).GetBytes(_xml);
+            var bytes = new UTF8Encoding(false).GetBytes(CurrentXml);
             await stream.WriteAsync(bytes);
             InfoText.Text = $"已保存：{file.TryGetLocalPath() ?? file.Name}";
         }

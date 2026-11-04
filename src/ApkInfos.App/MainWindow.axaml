@@ -1,3 +1,11 @@
+<!--
+    ApkInfos - APK / AAB 信息查看工具
+    文件：MainWindow.axaml
+    说明：主窗口布局：APK 信息、构建信息、签名、Keystore 比对、Firebase 与第三方 SDK
+    作者：Wade.liuyu (meleke_ly@126.com)
+    创建：2026-11-04
+    许可：Apache License 2.0
+-->
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="ApkInfos.App.MainWindow"
@@ -58,7 +66,7 @@
                         </Border>
                         <TextBlock Grid.Row="6" Text="权限要求" VerticalAlignment="Top" Margin="0,8,8,0" />
                         <TextBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" x:Name="PermissionsBox"
-                                 Classes="multi" Height="220" />
+                                 Classes="multi" Height="160" />
                     </Grid>
 
                     <!-- 文件信息 -->
@@ -77,6 +85,69 @@
                         <TextBox Grid.Row="3" Grid.Column="1" x:Name="FileMd5Box" />
                         <TextBlock Grid.Row="4" Text="大小" />
                         <TextBox Grid.Row="4" Grid.Column="1" x:Name="FileSizeBox" />
+                    </Grid>
+
+                    <!-- Firebase 配置（由 google-services.json 生成的字符串资源还原） -->
+                    <Grid ColumnDefinitions="Auto,*">
+                        <TextBlock Classes="group" Text="Firebase 配置（google-services.json）" />
+                        <Border Grid.Column="1" Classes="line" />
+                    </Grid>
+                    <Grid Classes="form" ColumnDefinitions="96,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Text="App ID" />
+                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="FbAppIdBox" />
+                        <TextBlock Grid.Row="1" Text="项目编号" />
+                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="FbProjectNumberBox" />
+                        <TextBlock Grid.Row="2" Text="项目 ID" />
+                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="FbProjectIdBox" />
+                        <TextBlock Grid.Row="3" Text="Storage" />
+                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="FbStorageBox" />
+                        <TextBlock Grid.Row="4" Text="API Key" />
+                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="FbApiKeyBox" />
+                        <TextBlock Grid.Row="5" Text="Database" />
+                        <TextBox Grid.Row="5" Grid.Column="1" x:Name="FbDatabaseUrlBox" />
+                        <TextBlock Grid.Row="6" Text="Web Client" />
+                        <TextBox Grid.Row="6" Grid.Column="1" x:Name="FbWebClientBox" Classes="wrap" />
+                        <Grid Grid.Row="7" Grid.Column="1" ColumnDefinitions="Auto,*" Margin="0,4,0,0">
+                            <Button x:Name="ExportFirebaseButton" Content="导出 google-services.json…"
+                                    Click="OnExportFirebaseClick" IsEnabled="False" />
+                            <TextBlock Grid.Column="1" Margin="8,0,0,0"
+                                       Text="仅能还原包内资源，不含 Android OAuth 客户端与其它 App 条目"
+                                       VerticalAlignment="Center" Opacity="0.6" FontSize="12" TextWrapping="Wrap" />
+                        </Grid>
+                    </Grid>
+
+                    <!-- 第三方 SDK -->
+                    <Grid ColumnDefinitions="Auto,*">
+                        <TextBlock Classes="group" Text="第三方 SDK" />
+                        <Border Grid.Column="1" Classes="line" />
+                    </Grid>
+                    <Grid Classes="form" ColumnDefinitions="96,*"
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Text="Facebook" FontWeight="SemiBold" />
+                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="FbStatusBox" />
+                        <TextBlock Grid.Row="1" Text="App ID" />
+                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="FbAppIdBoxSdk" />
+                        <TextBlock Grid.Row="2" Text="Client Token" />
+                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="FbClientTokenBox" />
+                        <TextBlock Grid.Row="3" Text="自动记录事件" />
+                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="FbAutoLogBox" />
+                        <TextBlock Grid.Row="4" Text="广告 ID 收集" />
+                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="FbAdIdBox" />
+                        <TextBlock Grid.Row="5" Text="自动初始化" />
+                        <TextBox Grid.Row="5" Grid.Column="1" x:Name="FbAutoInitBox" />
+                        <TextBlock Grid.Row="6" Grid.Column="1" x:Name="FbWarningText" Foreground="Crimson"
+                                   TextWrapping="Wrap" HorizontalAlignment="Left" Margin="2,2,0,4" IsVisible="False" />
+
+                        <TextBlock Grid.Row="7" Text="Adjust" FontWeight="SemiBold" Margin="0,8,8,0" />
+                        <TextBox Grid.Row="7" Grid.Column="1" x:Name="AdjustStatusBox" Classes="wrap" Margin="0,11,0,3" />
+                        <TextBlock Grid.Row="8" Text="原生 SDK" />
+                        <TextBox Grid.Row="8" Grid.Column="1" x:Name="AdjustNativeBox" />
+                        <TextBlock Grid.Row="9" Text="Unity 插件" />
+                        <TextBox Grid.Row="9" Grid.Column="1" x:Name="AdjustUnityBox" />
+                        <TextBlock Grid.Row="10" Text="App Token" />
+                        <TextBox Grid.Row="10" Grid.Column="1" x:Name="AdjustTokenBox" />
+                        <TextBlock Grid.Row="11" Grid.Column="1" x:Name="AdjustWarningText" Foreground="Crimson"
+                                   TextWrapping="Wrap" HorizontalAlignment="Left" Margin="2,2,0,4" IsVisible="False" />
                     </Grid>
                 </StackPanel>
 

@@ -7,5 +7,9 @@
     <Version>1.0.0</Version>
     <Company>ApkInfos</Company>
     <Product>ApkInfos</Product>
+    <Authors>Wade.liuyu (meleke_ly@126.com)</Authors>
+    <Copyright>Copyright © 2026 Wade.liuyu</Copyright>
+    <RepositoryUrl>https://github.com/meleke/ApkInfos</RepositoryUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 </Project>

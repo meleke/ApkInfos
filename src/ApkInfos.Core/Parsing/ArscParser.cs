@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------------
+// ApkInfos - APK / AAB 信息查看工具
+// 文件：ArscParser.cs
+// 说明：解析 APK 的 resources.arsc 资源表
+// 作者：Wade.liuyu (meleke_ly@126.com)
+// 创建：2026-11-04
+// 许可：Apache License 2.0
+// ----------------------------------------------------------------------------
+
 using System.Buffers.Binary;
 
 namespace ApkInfos.Core.Parsing;

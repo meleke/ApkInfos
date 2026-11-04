@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------------
+// ApkInfos - APK / AAB 信息查看工具
+// 文件：MainWindow.axaml.cs
+// 说明：主窗口逻辑：打开/拖拽文件、展示解析结果、Keystore 比对、导出
+// 作者：Wade.liuyu (meleke_ly@126.com)
+// 创建：2026-11-04
+// 许可：Apache License 2.0
+// ----------------------------------------------------------------------------
+
 using ApkInfos.Core.Models;
 using ApkInfos.Core.Parsing;
 using ApkInfos.Core.Util;
@@ -209,6 +218,10 @@ public partial class MainWindow : Window
         FileMd5Box.Text = info.FileMd5;
         FileSizeBox.Text = ApkInfo.FormatSize(info.FileSize);
 
+        ShowFirebase(info.Firebase);
+        ShowFacebook(info.Facebook);
+        ShowAdjust(info.Adjust);
+
         IconImage.Source = LoadBitmap(info.IconBytes);
         if (info.IconBytes != null && IconImage.Source == null)
         {
@@ -249,6 +262,95 @@ public partial class MainWindow : Window
         }
     }
 
+    // ---------------- Firebase ----------------
+
+    private void ShowFirebase(FirebaseConfig? fb)
+    {
+        const string missing = "(无)";
+        FbAppIdBox.Text = fb?.AppId ?? "(未检测到 google-services 资源，未接入 Firebase)";
+        FbProjectNumberBox.Text = fb == null ? "" : fb.ProjectNumber ?? missing;
+        FbProjectIdBox.Text = fb == null ? "" : fb.ProjectId ?? missing;
+        FbStorageBox.Text = fb == null ? "" : fb.StorageBucket ?? missing;
+        FbApiKeyBox.Text = fb == null ? "" : fb.ApiKey ?? missing;
+        FbDatabaseUrlBox.Text = fb == null ? "" : fb.DatabaseUrl ?? missing;
+        FbWebClientBox.Text = fb == null ? "" : fb.DefaultWebClientId ?? missing;
+        ExportFirebaseButton.IsEnabled = fb != null;
+    }
+
+    private async void OnExportFirebaseClick(object? sender, RoutedEventArgs e)
+    {
+        var fb = _info?.Firebase;
+        if (_info == null || fb == null)
+        {
+            return;
+        }
+
+        var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        {
+            Title = "导出 google-services.json",
+            SuggestedFileName = "google-services.json",
+            DefaultExtension = "json",
+            FileTypeChoices = new[]
+            {
+                new FilePickerFileType("JSON 文件")
+                {
+                    Patterns = new[] { "*.json" },
+                },
+            },
+        });
+
+        if (file == null)
+        {
+            return;
+        }
+
+        try
+        {
+            var bytes = new System.Text.UTF8Encoding(false).GetBytes(fb.ToGoogleServicesJson(_info.PackageName));
+            await using var stream = await file.OpenWriteAsync();
+            stream.SetLength(0);
+            await stream.WriteAsync(bytes);
+            StatusText.Text = $"已导出：{file.TryGetLocalPath() ?? file.Name}";
+        }
+        catch (Exception ex)
+        {
+            StatusText.Text = $"导出失败：{ex.Message}";
+        }
+    }
+
+    // ---------------- 第三方 SDK ----------------
+
+    private void ShowFacebook(FacebookInfo fb)
+    {
+        FbStatusBox.Text = fb.Integrated ? "已集成" : "未集成";
+        FbAppIdBoxSdk.Text = fb.Integrated ? fb.AppId ?? "(未找到)" : "";
+        FbClientTokenBox.Text = fb.Integrated ? fb.ClientToken ?? "(未找到)" : "";
+        FbAutoLogBox.Text = fb.Integrated ? fb.AutoLogAppEvents ?? "(未设置，默认 true)" : "";
+        FbAdIdBox.Text = fb.Integrated ? fb.AdvertiserIdCollection ?? "(未设置，默认 true)" : "";
+        FbAutoInitBox.Text = fb.Integrated ? fb.AutoInit ?? "(未设置，默认 true)" : "";
+        ShowWarnings(FbWarningText, fb.Warnings);
+    }
+
+    private void ShowAdjust(AdjustInfo adjust)
+    {
+        AdjustStatusBox.Text = adjust.Integrated ? $"已集成（{string.Join("；", adjust.Evidence)}）" : "未集成";
+        AdjustNativeBox.Text = adjust.Integrated ? JoinOr(adjust.NativeVersions, "(未识别)") : "";
+        AdjustUnityBox.Text = adjust.Integrated ? JoinOr(adjust.UnityVersions, "(非 Unity 或未识别)") : "";
+        AdjustTokenBox.Text = adjust.Integrated ? "无法从包中可靠获取（运行时由代码传入 AdjustConfig）" : "";
+        ShowWarnings(AdjustWarningText, adjust.Warnings);
+    }
+
+    private static string JoinOr(List<string> values, string fallback)
+    {
+        return values.Count == 0 ? fallback : string.Join(", ", values);
+    }
+
+    private static void ShowWarnings(TextBlock target, List<string> warnings)
+    {
+        target.IsVisible = warnings.Count > 0;
+        target.Text = string.Join(Environment.NewLine, warnings.Select(w => "⚠ " + w));
+    }
+
     // ---------------- AndroidManifest.xml ----------------
 
     private void OnManifestClick(object? sender, RoutedEventArgs e)
@@ -259,7 +361,7 @@ public partial class MainWindow : Window
         }
 
         string fileName = string.IsNullOrEmpty(_info.PackageName) ? "AndroidManifest.xml" : $"{_info.PackageName}_AndroidManifest.xml";
-        var window = new ManifestWindow(_info.FileName, _info.ManifestXml, fileName);
+        var window = new ManifestWindow(_info.FileName, _info.ManifestXml, _info.ManifestXmlAnnotated, fileName);
         window.Show(this);
     }
 

@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------------
+// ApkInfos - APK / AAB 信息查看工具
+// 文件：ResourceTable.cs
+// 说明：统一的资源表模型（字符串解析、图标按密度选取）
+// 作者：Wade.liuyu (meleke_ly@126.com)
+// 创建：2026-11-04
+// 许可：Apache License 2.0
+// ----------------------------------------------------------------------------
+
 namespace ApkInfos.Core.Parsing;
 
 /// <summary>
@@ -76,6 +85,40 @@ public sealed class ResourceTable
     public ResEntry? Get(uint id)
     {
         return _entries.TryGetValue(id, out var entry) ? entry : null;
+    }
+
+    private Dictionary<string, ResEntry>? _nameIndex;
+
+    /// <summary>
+    /// 按 "type/name" 查找资源（如 string/google_app_id），多个包同名时取第一个。
+    /// </summary>
+    public ResEntry? FindByName(string type, string name)
+    {
+        if (_nameIndex == null)
+        {
+            _nameIndex = new Dictionary<string, ResEntry>(StringComparer.Ordinal);
+            foreach (var entry in _entries.Values.OrderBy(e => e.Id))
+            {
+                _nameIndex.TryAdd($"{entry.Type}/{entry.Name}", entry);
+            }
+        }
+
+        return _nameIndex.TryGetValue($"{type}/{name}", out var found) ? found : null;
+    }
+
+    /// <summary>
+    /// 按名称解析字符串资源，不存在或为空返回 null。
+    /// </summary>
+    public string? ResolveStringByName(string name)
+    {
+        var entry = FindByName("string", name);
+        if (entry == null)
+        {
+            return null;
+        }
+
+        string? value = ResolveString(entry.Id);
+        return string.IsNullOrEmpty(value) ? null : value;
     }
 
     /// <summary>

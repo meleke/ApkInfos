@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------------
+// ApkInfos - APK / AAB 信息查看工具
+// 文件：ManifestXmlWriter.cs
+// 说明：把 Manifest 模型输出为可读 XML（可带中文注解）
+// 作者：Wade.liuyu (meleke_ly@126.com)
+// 创建：2026-11-04
+// 许可：Apache License 2.0
+// ----------------------------------------------------------------------------
+
 using System.Globalization;
 using System.Text;
 using System.Xml;
@@ -9,7 +18,8 @@ namespace ApkInfos.Core.Parsing;
 /// </summary>
 public static class ManifestXmlWriter
 {
-    public static string Write(ManifestElement root, ResourceTable? resources)
+    /// <param name="annotate">为 true 时在元素前插入中文注解（XML 注释）。</param>
+    public static string Write(ManifestElement root, ResourceTable? resources, bool annotate = false)
     {
         var sb = new StringBuilder();
         var settings = new XmlWriterSettings
@@ -27,15 +37,27 @@ public static class ManifestXmlWriter
         {
             writer.WriteStartDocument();
             var prefixes = new Dictionary<string, string>();
-            WriteElement(writer, root, resources, prefixes);
+            var annotator = annotate ? new ManifestAnnotator(root, resources) : null;
+            if (annotator != null)
+            {
+                writer.WriteComment(SafeComment("由 ApkInfos 解码生成，注释为工具自动添加的中文注解，并非原始内容"));
+            }
+
+            WriteElement(writer, root, null, resources, prefixes, annotator);
             writer.WriteEndDocument();
         }
 
         return sb.ToString();
     }
 
-    private static void WriteElement(XmlWriter writer, ManifestElement element, ResourceTable? resources, Dictionary<string, string> prefixes)
+    private static void WriteElement(XmlWriter writer, ManifestElement element, ManifestElement? parent, ResourceTable? resources, Dictionary<string, string> prefixes, ManifestAnnotator? annotator)
     {
+        string? note = annotator?.Annotate(element, parent);
+        if (!string.IsNullOrWhiteSpace(note))
+        {
+            writer.WriteComment(SafeComment(note));
+        }
+
         // 记录本层声明的命名空间前缀，子元素继承
         var scope = new Dictionary<string, string>(prefixes);
         foreach (var ns in element.Namespaces)
@@ -77,7 +99,7 @@ public static class ManifestXmlWriter
 
         foreach (var child in element.Children)
         {
-            WriteElement(writer, child, resources, scope);
+            WriteElement(writer, child, element, resources, scope, annotator);
         }
 
         writer.WriteEndElement();
@@ -175,6 +197,15 @@ public static class ManifestXmlWriter
             5 => "mm",
             _ => "",
         };
+    }
+
+    /// <summary>
+    /// XML 注释中不允许出现 "--"，也不能以 "-" 结尾。
+    /// </summary>
+    private static string SafeComment(string text)
+    {
+        string s = text.Replace("--", "- -");
+        return " " + s + " ";
     }
 
     private static string SafeName(string name)

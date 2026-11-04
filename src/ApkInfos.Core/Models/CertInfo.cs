@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------------
+// ApkInfos - APK / AAB 信息查看工具
+// 文件：CertInfo.cs
+// 说明：X.509 证书摘要信息（指纹、主题、有效期等）
+// 作者：Wade.liuyu (meleke_ly@126.com)
+// 创建：2026-11-04
+// 许可：Apache License 2.0
+// ----------------------------------------------------------------------------
+
 using System.Security.Cryptography.X509Certificates;
 using ApkInfos.Core.Util;
 

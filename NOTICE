@@ -1,0 +1,12 @@
+ApkInfos
+Copyright 2026 Wade.liuyu (meleke_ly@126.com)
+
+This product is licensed under the Apache License, Version 2.0.
+See the LICENSE file for details.
+
+This product depends on the following third-party components, distributed
+under their own licenses:
+
+  - Avalonia UI (MIT License)                       https://avaloniaui.net/
+  - .NET runtime and libraries (MIT License)        https://github.com/dotnet
+  - SkiaSharp / HarfBuzzSharp (MIT License)         https://github.com/mono/SkiaSharp

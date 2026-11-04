@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------------
+// ApkInfos - APK / AAB 信息查看工具
+// 文件：ApkSignatureReader.cs
+// 说明：读取 v1 / v2 / v3 / v3.1 签名证书
+// 作者：Wade.liuyu (meleke_ly@126.com)
+// 创建：2026-11-04
+// 许可：Apache License 2.0
+// ----------------------------------------------------------------------------
+
 using System.Buffers.Binary;
 using System.IO.Compression;
 using System.Security.Cryptography.Pkcs;

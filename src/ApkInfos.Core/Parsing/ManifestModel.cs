@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------------
+// ApkInfos - APK / AAB 信息查看工具
+// 文件：ManifestModel.cs
+// 说明：统一的 Manifest 元素/属性模型与 android 系统属性 ID 表
+// 作者：Wade.liuyu (meleke_ly@126.com)
+// 创建：2026-11-04
+// 许可：Apache License 2.0
+// ----------------------------------------------------------------------------
+
 namespace ApkInfos.Core.Parsing;
 
 /// <summary>

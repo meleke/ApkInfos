@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------------
+// ApkInfos - APK / AAB 信息查看工具
+// 文件：ProtoXmlParser.cs
+// 说明：解析 AAB 中 protobuf 格式的 XML
+// 作者：Wade.liuyu (meleke_ly@126.com)
+// 创建：2026-11-04
+// 许可：Apache License 2.0
+// ----------------------------------------------------------------------------
+
 using System.Globalization;
 
 namespace ApkInfos.Core.Parsing;

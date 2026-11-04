@@ -1,5 +1,12 @@
-﻿# 生成应用图标：app.png / app.ico（Windows）/ app.icns（macOS）
+﻿# ----------------------------------------------------------------------------
+# ApkInfos - APK / AAB 信息查看工具
+# 文件：make-icons.ps1
+# 说明：生成应用图标：app.png / app.ico（Windows）/ app.icns（macOS）
 # 用法：powershell -ExecutionPolicy Bypass -File tools\make-icons.ps1
+# 作者：Wade.liuyu (meleke_ly@126.com)
+# 创建：2026-11-04
+# 许可：Apache License 2.0
+# ----------------------------------------------------------------------------
 param(
     [string]$OutDir = (Join-Path $PSScriptRoot '..\src\ApkInfos.App\Assets')
 )
