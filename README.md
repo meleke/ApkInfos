@@ -41,11 +41,11 @@
 
 | 系统 | 文件 | 说明 |
 |---|---|---|
-| Windows 10 / 11（64 位） | [`ApkInfos-win-x64.exe`](https://github.com/meleke/ApkInfos/releases/latest/download/ApkInfos-win-x64.exe) | 单文件，下载后直接双击运行 |
+| Windows 10 / 11（64 位） | [`ApkInfos-win-x64.zip`](https://github.com/meleke/ApkInfos/releases/latest/download/ApkInfos-win-x64.zip) | 解压得到 `ApkInfos-win-x64.exe`，双击运行 |
 | macOS 12+（Apple 芯片 M1 / M2 / M3 / M4…） | [`ApkInfos-osx-arm64.zip`](https://github.com/meleke/ApkInfos/releases/latest/download/ApkInfos-osx-arm64.zip) | 解压得到 `ApkInfos.app` |
 | macOS 12+（Intel 芯片） | [`ApkInfos-osx-x64.zip`](https://github.com/meleke/ApkInfos/releases/latest/download/ApkInfos-osx-x64.zip) | 解压得到 `ApkInfos.app` |
 
-> 不确定 Mac 是哪种芯片：点击左上角  →「关于本机」，「芯片」一栏写 Apple M… 选 arm64，写 Intel 选 x64。
+> 不确定 Mac 是哪种芯片：点击屏幕左上角的苹果菜单 →「关于本机」，「芯片」一栏写 Apple M… 选 arm64，写 Intel 选 x64。
 
 ### Windows 首次运行
 
