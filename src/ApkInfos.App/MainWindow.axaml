@@ -1,0 +1,167 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="ApkInfos.App.MainWindow"
+        Title="ApkInfos - APK / AAB 信息查看"
+        Icon="/Assets/app.ico"
+        Width="1120" Height="800"
+        MinWidth="860" MinHeight="560"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Microsoft YaHei UI, PingFang SC, Segoe UI, Helvetica Neue"
+        DragDrop.AllowDrop="True">
+
+    <DockPanel>
+        <!-- 工具栏 -->
+        <Border DockPanel.Dock="Top" Padding="12,8" BorderThickness="0,0,0,1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button x:Name="OpenButton" Content="打开 APK / AAB…" Click="OnOpenClick" />
+                <Button x:Name="ManifestButton" Content="生成 AndroidManifest.xml" Click="OnManifestClick" IsEnabled="False" />
+                <TextBlock Text="提示：可直接把 .apk / .aab（或 keystore 文件）拖到窗口中" VerticalAlignment="Center" Opacity="0.6" />
+            </StackPanel>
+        </Border>
+
+        <!-- 状态栏 -->
+        <Border DockPanel.Dock="Bottom" Padding="12,5" BorderThickness="0,1,0,0"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+            <TextBlock x:Name="StatusText" Text="就绪" TextTrimming="CharacterEllipsis" />
+        </Border>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+            <Grid ColumnDefinitions="*,*" Margin="14,4,14,14">
+
+                <!-- ================= 左列 ================= -->
+                <StackPanel Grid.Column="0" Margin="0,0,16,0">
+
+                    <!-- APK 信息 -->
+                    <Grid ColumnDefinitions="Auto,*">
+                        <TextBlock Classes="group" Text="APK 信息" />
+                        <Border Grid.Column="1" Classes="line" />
+                    </Grid>
+                    <Grid Classes="form" ColumnDefinitions="96,*,112"
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Text="包名" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="PackageNameBox" />
+                        <TextBlock Grid.Row="1" Text="名称" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" x:Name="LabelBox" />
+                        <TextBlock Grid.Row="2" Text="证书MD5" />
+                        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" x:Name="CertMd5Box" />
+                        <TextBlock Grid.Row="3" Text="版本号" />
+                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="VersionNameBox" />
+                        <TextBlock Grid.Row="4" Text="内部版本号" />
+                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="VersionCodeBox" />
+                        <TextBlock Grid.Row="5" Text="Min.SDK" />
+                        <TextBox Grid.Row="5" Grid.Column="1" x:Name="MinSdkBox" />
+                        <Border Grid.Row="3" Grid.RowSpan="3" Grid.Column="2" Margin="10,3,0,3"
+                                Width="84" Height="84" CornerRadius="8" ClipToBounds="True"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image x:Name="IconImage" Stretch="Uniform" />
+                        </Border>
+                        <TextBlock Grid.Row="6" Text="权限要求" VerticalAlignment="Top" Margin="0,8,8,0" />
+                        <TextBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" x:Name="PermissionsBox"
+                                 Classes="multi" Height="220" />
+                    </Grid>
+
+                    <!-- 文件信息 -->
+                    <Grid ColumnDefinitions="Auto,*">
+                        <TextBlock Classes="group" Text="文件信息" />
+                        <Border Grid.Column="1" Classes="line" />
+                    </Grid>
+                    <Grid Classes="form" ColumnDefinitions="96,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Text="文件名" />
+                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="FileNameBox" />
+                        <TextBlock Grid.Row="1" Text="路径" />
+                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="FilePathBox" />
+                        <TextBlock Grid.Row="2" Text="类型" />
+                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="FileTypeBox" />
+                        <TextBlock Grid.Row="3" Text="MD5" />
+                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="FileMd5Box" />
+                        <TextBlock Grid.Row="4" Text="大小" />
+                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="FileSizeBox" />
+                    </Grid>
+                </StackPanel>
+
+                <!-- ================= 右列 ================= -->
+                <StackPanel Grid.Column="1">
+
+                    <!-- 构建信息 -->
+                    <Grid ColumnDefinitions="Auto,*">
+                        <TextBlock Classes="group" Text="构建信息" />
+                        <Border Grid.Column="1" Classes="line" />
+                    </Grid>
+                    <Grid Classes="form" ColumnDefinitions="96,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Text="Target SDK" />
+                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="TargetSdkBox" />
+                        <TextBlock Grid.Row="1" Text="Compile SDK" />
+                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="CompileSdkBox" />
+                        <TextBlock Grid.Row="2" Text="debuggable" />
+                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="DebuggableBox" />
+                        <TextBlock Grid.Row="3" Text="allowBackup" />
+                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="AllowBackupBox" />
+                        <TextBlock Grid.Row="4" Text="ABI 架构" />
+                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="AbiBox" />
+                        <TextBlock Grid.Row="5" Text="AAB 模块" />
+                        <TextBox Grid.Row="5" Grid.Column="1" x:Name="ModulesBox" />
+                    </Grid>
+
+                    <!-- 签名详情 -->
+                    <Grid ColumnDefinitions="Auto,*">
+                        <TextBlock Classes="group" Text="签名详情" />
+                        <Border Grid.Column="1" Classes="line" />
+                    </Grid>
+                    <Grid Classes="form" ColumnDefinitions="96,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Text="签名方案" />
+                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="SchemesBox" />
+                        <TextBlock Grid.Row="1" Text="SHA1" />
+                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="CertSha1Box" />
+                        <TextBlock Grid.Row="2" Text="SHA256" />
+                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="CertSha256Box" Classes="wrap" />
+                        <TextBlock Grid.Row="3" Text="主题" />
+                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="SubjectBox" Classes="wrap" />
+                        <TextBlock Grid.Row="4" Text="颁发者" />
+                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="IssuerBox" Classes="wrap" />
+                        <TextBlock Grid.Row="5" Text="有效期" />
+                        <TextBox Grid.Row="5" Grid.Column="1" x:Name="ValidityBox" />
+                        <TextBlock Grid.Row="6" Text="序列号" />
+                        <TextBox Grid.Row="6" Grid.Column="1" x:Name="SerialBox" />
+                        <TextBlock Grid.Row="7" Text="签名算法" />
+                        <TextBox Grid.Row="7" Grid.Column="1" x:Name="SigAlgBox" />
+                    </Grid>
+
+                    <!-- Keystore -->
+                    <Grid ColumnDefinitions="Auto,*">
+                        <TextBlock Classes="group" Text="Keystore 比对" />
+                        <Border Grid.Column="1" Classes="line" />
+                    </Grid>
+                    <Grid Classes="form" ColumnDefinitions="96,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Text="Keystore" />
+                        <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,Auto" Margin="0,3">
+                            <TextBox x:Name="KeystorePathBox" Watermark="选择 .jks / .keystore / .p12 / .pfx 文件" />
+                            <Button Grid.Column="1" Content="浏览…" Margin="6,0,0,0" Click="OnBrowseKeystoreClick" />
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="密码" />
+                        <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="*,Auto" Margin="0,3">
+                            <TextBox x:Name="KeystorePasswordBox" PasswordChar="●" Watermark="storepass（回车加载）"
+                                     KeyDown="OnPasswordKeyDown" />
+                            <Button Grid.Column="1" x:Name="LoadKeystoreButton" Content="加载" Margin="6,0,0,0"
+                                    Click="OnLoadKeystoreClick" />
+                        </Grid>
+                        <TextBlock Grid.Row="2" Text="Alias" />
+                        <ComboBox Grid.Row="2" Grid.Column="1" x:Name="AliasCombo" Margin="0,3"
+                                  HorizontalAlignment="Stretch" SelectionChanged="OnAliasChanged" />
+                        <TextBlock Grid.Row="3" Text="比对结果" />
+                        <TextBlock Grid.Row="3" Grid.Column="1" x:Name="CompareText" HorizontalAlignment="Left"
+                                   FontWeight="SemiBold" Margin="2,6" />
+                        <TextBlock Grid.Row="4" Text="条目信息" />
+                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="AliasInfoBox" Classes="wrap" />
+                        <TextBlock Grid.Row="5" Text="MD5" />
+                        <TextBox Grid.Row="5" Grid.Column="1" x:Name="AliasMd5Box" />
+                        <TextBlock Grid.Row="6" Text="SHA1" />
+                        <TextBox Grid.Row="6" Grid.Column="1" x:Name="AliasSha1Box" />
+                        <TextBlock Grid.Row="7" Text="SHA256" />
+                        <TextBox Grid.Row="7" Grid.Column="1" x:Name="AliasSha256Box" Classes="wrap" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

@@ -1,0 +1,39 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ApkInfos.App.App"
+             RequestedThemeVariant="Default">
+    <Application.Styles>
+        <FluentTheme DensityStyle="Compact" />
+
+        <!-- 分组标题：文字 + 右侧细线（参照原型图） -->
+        <Style Selector="TextBlock.group">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,12,8,6" />
+        </Style>
+        <Style Selector="Border.line">
+            <Setter Property="Height" Value="1" />
+            <Setter Property="Background" Value="#8FB3D9" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,6,0,0" />
+        </Style>
+
+        <!-- 表单：左侧标签右对齐，右侧只读文本框 -->
+        <Style Selector="Grid.form > TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+        </Style>
+        <Style Selector="Grid.form > TextBox">
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="Margin" Value="0,3" />
+        </Style>
+        <Style Selector="TextBox.wrap">
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="TextBox.multi">
+            <Setter Property="AcceptsReturn" Value="True" />
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+        </Style>
+    </Application.Styles>
+</Application>
