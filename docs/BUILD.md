@@ -104,7 +104,8 @@ powershell -ExecutionPolicy Bypass -File publish.ps1 -Version 1.1.0
 
 | 文件 | 约大小 |
 |---|---|
-| `ApkInfos-win-x64.exe` | 20 MB |
+| `ApkInfos-win-x64.exe`（本地使用，不上传） | 20 MB |
+| `ApkInfos-win-x64.zip`（内含 `ApkInfos-win-x64.exe`） | 14 MB |
 | `ApkInfos-osx-arm64.zip`（内含 `ApkInfos.app`） | 16 MB |
 | `ApkInfos-osx-x64.zip`（内含 `ApkInfos.app`） | 16 MB |
 
@@ -113,14 +114,16 @@ mac 的 zip 由脚本手动打包：会写入 Unix 权限位（可执行文件�
 ## 发布到 GitHub Releases
 
 1. 修改 `Directory.Build.props` 中的 `<Version>`，并在 `CHANGELOG.md` 中补充更新内容。
-2. 运行 `publish.ps1 -Version x.y.z` 生成 `dist/` 下的三个文件。
+2. 运行 `publish.ps1 -Version x.y.z` 生成 `dist/` 下的产物。
 3. 在 GitHub 仓库页面 **Releases → Draft a new release**：
    - Tag 填 `vx.y.z`，标题如 `ApkInfos vx.y.z`
-   - 说明可复制 `CHANGELOG.md` 中对应版本的内容
-   - 把 `dist/` 下的 `ApkInfos-win-x64.exe`、`ApkInfos-osx-arm64.zip`、`ApkInfos-osx-x64.zip` 拖进附件区
+   - 说明可打开本地 `CHANGELOG.md`，复制对应版本的 Markdown 原文（不要从网页复制渲染后的文字，否则标题和列表格式会丢失）
+   - 把 `dist/` 下的 `ApkInfos-win-x64.zip`、`ApkInfos-osx-arm64.zip`、`ApkInfos-osx-x64.zip` 拖进说明框**下方**的附件区（拖进说明框会提示不支持的文件类型）
 4. 发布。
 
 > 请保持附件文件名不变：README 中的下载链接使用 `releases/latest/download/<文件名>`，始终指向最新版本。
+>
+> Windows 上传的是 zip 而不是 exe：直接上传 exe 容易被网络代理或安全软件拦截，用户下载 exe 也更容易被浏览器拦截。
 
 ## 代码风格
 

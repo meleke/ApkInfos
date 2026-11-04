@@ -1,7 +1,7 @@
 ﻿# ----------------------------------------------------------------------------
 # ApkInfos - APK / AAB 信息查看工具
 # 文件：publish.ps1
-# 说明：一键发布：Windows exe + macOS .app（自包含、单文件、部分裁剪、压缩）
+# 说明：一键发布：Windows exe/zip + macOS .app zip（自包含、单文件、部分裁剪、压缩）
 # 用法：powershell -ExecutionPolicy Bypass -File publish.ps1 [-Runtimes win-x64,osx-arm64,osx-x64]
 # 作者：Wade.liuyu (meleke_ly@126.com)
 # 创建：2026-11-04
@@ -68,6 +68,20 @@ function Write-MacZip([string]$appDir, [string]$zipPath)
     Set-ZipUnixHost $zipPath
 }
 
+function Write-WinZip([string]$exePath, [string]$zipPath)
+{
+    # zip 内只有一个 exe，文件名与 exe 一致（如 ApkInfos-win-x64.exe）
+    $zip = [IO.Compression.ZipFile]::Open($zipPath, [IO.Compression.ZipArchiveMode]::Create)
+    try
+    {
+        [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $exePath, (Split-Path $exePath -Leaf), [IO.Compression.CompressionLevel]::Optimal) | Out-Null
+    }
+    finally
+    {
+        $zip.Dispose()
+    }
+}
+
 function Set-ZipUnixHost([string]$zipPath)
 {
     # Windows 上生成的 zip「version made by」平台为 FAT，macOS 解压时会忽略 unix 权限位；
@@ -125,7 +139,10 @@ foreach ($rid in $Runtimes)
 
     if ($rid -like 'win-*')
     {
-        Copy-Item (Join-Path $pub 'ApkInfos.exe') (Join-Path $dist "ApkInfos-$rid.exe")
+        # exe 直接上传 GitHub 易被网络或安全软件拦截，发布时上传 zip；exe 保留在 dist/ 便于本地使用
+        $exe = Join-Path $dist "ApkInfos-$rid.exe"
+        Copy-Item (Join-Path $pub 'ApkInfos.exe') $exe
+        Write-WinZip $exe (Join-Path $dist "ApkInfos-$rid.zip")
         continue
     }
 
