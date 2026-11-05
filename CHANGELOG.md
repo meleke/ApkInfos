@@ -2,6 +2,16 @@
 
 本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.1] - 2026-11-05
+
+### 新增
+
+- 主窗口状态栏显示作者与联系邮箱，点击邮箱可直接发送邮件
+
+### 变更
+
+- Windows 版改为以 zip 包发布（`ApkInfos-win-x64.zip`，解压得到 `ApkInfos-win-x64.exe`）
+
 ## [1.0.0] - 2026-11-04
 
 首个版本。
@@ -18,4 +28,5 @@
 - 生成 AndroidManifest.xml，默认附带中文注解，可复制 / 另存为
 - 发布 Windows（x64）单文件 exe 与 macOS（Apple 芯片 / Intel）.app
 
+[1.0.1]: https://github.com/meleke/ApkInfos/releases/tag/v1.0.1
 [1.0.0]: https://github.com/meleke/ApkInfos/releases/tag/v1.0.0
