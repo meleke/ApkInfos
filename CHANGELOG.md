@@ -2,6 +2,12 @@
 
 本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.2] - 2026-11-05
+
+### 变更
+
+- google-services.json 改为与 AndroidManifest.xml 一致：点「生成 google-services.json」先在窗口中预览内容，再由用户选择「复制全部」或「另存为…」
+
 ## [1.0.1] - 2026-11-05
 
 ### 新增
@@ -28,5 +34,6 @@
 - 生成 AndroidManifest.xml，默认附带中文注解，可复制 / 另存为
 - 发布 Windows（x64）单文件 exe 与 macOS（Apple 芯片 / Intel）.app
 
+[1.0.2]: https://github.com/meleke/ApkInfos/releases/tag/v1.0.2
 [1.0.1]: https://github.com/meleke/ApkInfos/releases/tag/v1.0.1
 [1.0.0]: https://github.com/meleke/ApkInfos/releases/tag/v1.0.0
