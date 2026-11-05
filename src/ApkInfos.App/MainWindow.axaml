@@ -31,7 +31,19 @@
         <!-- 状态栏 -->
         <Border DockPanel.Dock="Bottom" Padding="12,5" BorderThickness="0,1,0,0"
                 BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
-            <TextBlock x:Name="StatusText" Text="就绪" TextTrimming="CharacterEllipsis" />
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock x:Name="StatusText" Text="就绪" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                <!-- 作者信息：邮箱可点击，调用系统默认邮件程序 -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" Margin="16,0,0,0"
+                            VerticalAlignment="Center" Opacity="0.7">
+                    <TextBlock Text="作者：Wade.liuyu" VerticalAlignment="Center" />
+                    <!-- 不加下划线：下划线会盖住邮箱里的下划线 "_"，看起来像 melekely -->
+                    <HyperlinkButton NavigateUri="mailto:meleke_ly@126.com"
+                                     Padding="0" VerticalAlignment="Center" ToolTip.Tip="发送邮件">
+                        <TextBlock Text="meleke_ly@126.com" TextDecorations="{x:Null}" />
+                    </HyperlinkButton>
+                </StackPanel>
+            </Grid>
         </Border>
 
         <ScrollViewer HorizontalScrollBarVisibility="Disabled">
