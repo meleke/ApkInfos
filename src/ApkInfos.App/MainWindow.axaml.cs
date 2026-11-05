@@ -274,10 +274,13 @@ public partial class MainWindow : Window
         FbApiKeyBox.Text = fb == null ? "" : fb.ApiKey ?? missing;
         FbDatabaseUrlBox.Text = fb == null ? "" : fb.DatabaseUrl ?? missing;
         FbWebClientBox.Text = fb == null ? "" : fb.DefaultWebClientId ?? missing;
-        ExportFirebaseButton.IsEnabled = fb != null;
+        FirebaseJsonButton.IsEnabled = fb != null;
     }
 
-    private async void OnExportFirebaseClick(object? sender, RoutedEventArgs e)
+    /// <summary>
+    /// 先在查看窗口中显示还原出的 google-services.json，是否复制 / 另存为由用户决定。
+    /// </summary>
+    private void OnFirebaseJsonClick(object? sender, RoutedEventArgs e)
     {
         var fb = _info?.Firebase;
         if (_info == null || fb == null)
@@ -285,37 +288,27 @@ public partial class MainWindow : Window
             return;
         }
 
-        var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
-        {
-            Title = "导出 google-services.json",
-            SuggestedFileName = "google-services.json",
-            DefaultExtension = "json",
-            FileTypeChoices = new[]
-            {
-                new FilePickerFileType("JSON 文件")
-                {
-                    Patterns = new[] { "*.json" },
-                },
-            },
-        });
-
-        if (file == null)
-        {
-            return;
-        }
-
+        string json;
         try
         {
-            var bytes = new System.Text.UTF8Encoding(false).GetBytes(fb.ToGoogleServicesJson(_info.PackageName));
-            await using var stream = await file.OpenWriteAsync();
-            stream.SetLength(0);
-            await stream.WriteAsync(bytes);
-            StatusText.Text = $"已导出：{file.TryGetLocalPath() ?? file.Name}";
+            json = fb.ToGoogleServicesJson(_info.PackageName);
         }
         catch (Exception ex)
         {
-            StatusText.Text = $"导出失败：{ex.Message}";
+            StatusText.Text = $"生成 google-services.json 失败：{ex.Message}";
+            return;
         }
+
+        var window = new TextViewWindow(_info.FileName, new TextViewContent
+        {
+            DisplayName = "google-services.json",
+            Text = json,
+            SuggestedFileName = "google-services.json",
+            FileTypeName = "JSON 文件",
+            Extension = "json",
+            Hint = "由包内资源还原的最小可用版本：不含 Android OAuth 客户端（证书哈希）与同项目其它 App 的条目。",
+        });
+        window.Show(this);
     }
 
     // ---------------- 第三方 SDK ----------------
@@ -361,7 +354,15 @@ public partial class MainWindow : Window
         }
 
         string fileName = string.IsNullOrEmpty(_info.PackageName) ? "AndroidManifest.xml" : $"{_info.PackageName}_AndroidManifest.xml";
-        var window = new ManifestWindow(_info.FileName, _info.ManifestXml, _info.ManifestXmlAnnotated, fileName);
+        var window = new TextViewWindow(_info.FileName, new TextViewContent
+        {
+            DisplayName = "AndroidManifest.xml",
+            Text = _info.ManifestXml,
+            AnnotatedText = _info.ManifestXmlAnnotated,
+            SuggestedFileName = fileName,
+            FileTypeName = "XML 文件",
+            Extension = "xml",
+        });
         window.Show(this);
     }
 

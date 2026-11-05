@@ -86,7 +86,7 @@
 | Database | `firebase_database_url` | `project_info.firebase_url` |
 | Web Client | `default_web_client_id` | `oauth_client`（client_type = 3） |
 
-点「**导出 google-services.json…**」可保存一份最小可用的配置文件。原文件中的 Android OAuth 客户端（含证书哈希）与同项目其它 App 条目不在包内，无法还原。
+点「**生成 google-services.json**」会先在窗口中显示还原出的内容，确认后可「复制全部」或「另存为…」，得到一份最小可用的配置文件。原文件中的 Android OAuth 客户端（含证书哈希）与同项目其它 App 条目不在包内，无法还原。
 
 ## 第三方 SDK
 

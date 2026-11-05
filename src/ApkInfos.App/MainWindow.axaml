@@ -120,8 +120,8 @@
                         <TextBlock Grid.Row="6" Text="Web Client" />
                         <TextBox Grid.Row="6" Grid.Column="1" x:Name="FbWebClientBox" Classes="wrap" />
                         <Grid Grid.Row="7" Grid.Column="1" ColumnDefinitions="Auto,*" Margin="0,4,0,0">
-                            <Button x:Name="ExportFirebaseButton" Content="导出 google-services.json…"
-                                    Click="OnExportFirebaseClick" IsEnabled="False" />
+                            <Button x:Name="FirebaseJsonButton" Content="生成 google-services.json"
+                                    Click="OnFirebaseJsonClick" IsEnabled="False" />
                             <TextBlock Grid.Column="1" Margin="8,0,0,0"
                                        Text="仅能还原包内资源，不含 Android OAuth 客户端与其它 App 条目"
                                        VerticalAlignment="Center" Opacity="0.6" FontSize="12" TextWrapping="Wrap" />

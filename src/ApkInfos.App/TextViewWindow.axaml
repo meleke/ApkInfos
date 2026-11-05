@@ -1,15 +1,15 @@
 <!--
     ApkInfos - APK / AAB 信息查看工具
-    文件：ManifestWindow.axaml
-    说明：AndroidManifest.xml 查看窗口布局
+    文件：TextViewWindow.axaml
+    说明：文本查看窗口布局（AndroidManifest.xml、google-services.json 等）
     作者：Wade.liuyu (meleke_ly@126.com)
     创建：2026-11-04
     许可：Apache License 2.0
 -->
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="ApkInfos.App.ManifestWindow"
-        Title="AndroidManifest.xml"
+        x:Class="ApkInfos.App.TextViewWindow"
+        Title="ApkInfos"
         Icon="/Assets/app.ico"
         Width="960" Height="720"
         WindowStartupLocation="CenterOwner"
@@ -17,15 +17,20 @@
     <DockPanel>
         <Border DockPanel.Dock="Top" Padding="12,8" BorderThickness="0,0,0,1"
                 BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
-            <StackPanel Orientation="Horizontal" Spacing="8">
-                <CheckBox x:Name="AnnotateCheck" Content="中文注解" IsChecked="True"
-                          IsCheckedChanged="OnAnnotateChanged" />
-                <Button Content="复制全部" Click="OnCopyClick" />
-                <Button Content="另存为…" Click="OnSaveClick" />
-                <TextBlock x:Name="InfoText" VerticalAlignment="Center" Opacity="0.7" />
+            <StackPanel Spacing="6">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <!-- 只有提供了注解版本时才显示 -->
+                    <CheckBox x:Name="AnnotateCheck" Content="中文注解" IsChecked="True" IsVisible="False"
+                              IsCheckedChanged="OnAnnotateChanged" />
+                    <Button Content="复制全部" Click="OnCopyClick" />
+                    <Button Content="另存为…" Click="OnSaveClick" />
+                    <TextBlock x:Name="InfoText" VerticalAlignment="Center" Opacity="0.7" />
+                </StackPanel>
+                <!-- 内容说明（可选） -->
+                <TextBlock x:Name="HintText" IsVisible="False" Opacity="0.6" FontSize="12" TextWrapping="Wrap" />
             </StackPanel>
         </Border>
-        <TextBox x:Name="XmlBox"
+        <TextBox x:Name="ContentBox"
                  IsReadOnly="True"
                  AcceptsReturn="True"
                  TextWrapping="NoWrap"
